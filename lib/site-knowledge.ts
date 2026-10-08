@@ -54,7 +54,7 @@ export const SITE_KNOWLEDGE: KnowledgeEntry[] = [
   {
     id: "warranty-registration",
     title: "Warranty Registration",
-    url: "/customer/dashboard",
+    url: "/dashboard",
     keywords: ["register", "registration", "activate warranty", "warranty register"],
     content:
       "You can register your part's warranty from your customer dashboard after purchase. Keep your order number handy to link the warranty to your purchase.",
@@ -62,7 +62,7 @@ export const SITE_KNOWLEDGE: KnowledgeEntry[] = [
   {
     id: "how-to-order",
     title: "How to Order",
-    url: "/catalog",
+    url: "/brands",
     keywords: ["order", "buy", "purchase", "checkout", "how do i", "cart", "guest"],
     content:
       "Search the catalog or use VIN/vehicle search to find your part, add it to the cart, and check out. Guest checkout is available, or log in for order tracking and saved vehicles. You can also request a quote if you can't find a part.",
@@ -78,7 +78,7 @@ export const SITE_KNOWLEDGE: KnowledgeEntry[] = [
   {
     id: "vin-search",
     title: "VIN & Vehicle Search",
-    url: "/search",
+    url: "/ai-search",
     keywords: ["vin", "vehicle search", "fitment", "compatible", "compatibility", "fit my car", "year make model"],
     content:
       "Use VIN search or year/make/model vehicle search to find parts guaranteed to fit your vehicle. Enter your VIN for the most accurate fitment results.",
@@ -86,7 +86,7 @@ export const SITE_KNOWLEDGE: KnowledgeEntry[] = [
   {
     id: "categories",
     title: "Parts Categories",
-    url: "/catalog",
+    url: "/brands",
     keywords: ["category", "categories", "engine", "transmission", "body", "brakes", "suspension", "electrical", "cooling", "exhaust", "drivetrain", "what do you sell"],
     content:
       "We carry used engines, transmissions, body parts, brakes, suspension, electrical, cooling, exhaust, and drivetrain parts. Browse by category from the catalog or the Parts menu.",
@@ -94,7 +94,7 @@ export const SITE_KNOWLEDGE: KnowledgeEntry[] = [
   {
     id: "account",
     title: "Customer Account & Dashboard",
-    url: "/customer/login",
+    url: "/sign-in",
     keywords: ["account", "login", "sign in", "dashboard", "order tracking", "track order", "wishlist", "saved vehicles", "my orders"],
     content:
       "Log in to your customer account to track orders, view order history, manage your wishlist, save vehicles, register warranties, and start return requests. New customers can sign up in seconds.",
