@@ -24,7 +24,6 @@ export default function robots(): MetadataRoute.Robots {
           '/chat',
           '/test-plan',
           '/responsive-preview',
-          '/analytics',
         ],
       },
     ],
