@@ -15,8 +15,13 @@ interface ProductCardActionsProps {
   productType?: string
   make?: string
   shipping?: string
-  /** Where the "Details" button links. Defaults to /products/[productId]. */
-  detailsHref?: string
+  /**
+   * Where the "Details" button links. Defaults to /products/[productId];
+   * null hides it (e.g. when already on the product's own page).
+   */
+  detailsHref?: string | null
+  /** Quote-only parts can't be bought online: hide quantity and cart buttons. */
+  quoteOnly?: boolean
 }
 
 const PHONE_SALES = '708-896-2383'
@@ -32,6 +37,7 @@ export function ProductCardActions({
   make,
   shipping,
   detailsHref,
+  quoteOnly = false,
 }: ProductCardActionsProps) {
   const [quantity, setQuantity] = useState(1)
   const [addedToCart, setAddedToCart] = useState(false)
@@ -66,7 +72,9 @@ export function ProductCardActions({
   }
 
   const handleMessage = () => {
-    const message = `Hi, I'm interested in: ${productName} - $${productPrice}`
+    const message = quoteOnly
+      ? `Hi, I'd like a price for: ${productName}`
+      : `Hi, I'm interested in: ${productName} - $${productPrice}`
     window.location.href = `mailto:${CONTACT_EMAIL}?subject=Product Inquiry: ${productName}&body=${encodeURIComponent(message)}`
   }
 
@@ -82,45 +90,49 @@ export function ProductCardActions({
 
   return (
     <div className="flex flex-col gap-3 pt-4 border-t border-border/30">
-      {/* Quantity Selector */}
-      <div className="flex items-center gap-2">
-        <span className="text-sm font-medium text-muted-foreground">Qty:</span>
-        <input
-          type="number"
-          min="1"
-          max="10"
-          value={quantity}
-          onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-          className="w-16 px-2 py-1 rounded border border-border bg-background text-foreground text-sm"
-        />
-      </div>
+      {!quoteOnly && (
+        <>
+          {/* Quantity Selector */}
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-muted-foreground">Qty:</span>
+            <input
+              type="number"
+              min="1"
+              max="10"
+              value={quantity}
+              onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+              className="w-16 px-2 py-1 rounded border border-border bg-background text-foreground text-sm"
+            />
+          </div>
 
-      {/* Primary Actions */}
-      <div className="grid grid-cols-2 gap-2">
-        <Button
-          onClick={handleAddToCart}
-          className={`text-xs font-bold transition-all ${
-            addedToCart
-              ? 'bg-green-600 hover:bg-green-700'
-              : 'auapw-btn auapw-btn-blue'
-          }`}
-          title="Add to cart for bulk orders"
-        >
-          <ShoppingCart className="w-3 h-3" />
-          {addedToCart ? 'Added!' : 'Add to Cart'}
-        </Button>
-        <Button
-          onClick={handleBuyNow}
-          className="auapw-btn auapw-btn-green text-xs font-bold"
-          title="Add to cart and proceed to checkout"
-        >
-          <Zap className="w-3 h-3" />
-          Buy Now
-        </Button>
-      </div>
+          {/* Primary Actions */}
+          <div className="grid grid-cols-2 gap-2">
+            <Button
+              onClick={handleAddToCart}
+              className={`text-xs font-bold transition-all ${
+                addedToCart
+                  ? 'bg-green-600 hover:bg-green-700'
+                  : 'auapw-btn auapw-btn-blue'
+              }`}
+              title="Add to cart for bulk orders"
+            >
+              <ShoppingCart className="w-3 h-3" />
+              {addedToCart ? 'Added!' : 'Add to Cart'}
+            </Button>
+            <Button
+              onClick={handleBuyNow}
+              className="auapw-btn auapw-btn-green text-xs font-bold"
+              title="Add to cart and proceed to checkout"
+            >
+              <Zap className="w-3 h-3" />
+              Buy Now
+            </Button>
+          </div>
+        </>
+      )}
 
       {/* Secondary Actions */}
-      <div className="grid grid-cols-4 gap-2">
+      <div className={`grid gap-2 ${detailsHref === null ? 'grid-cols-3' : 'grid-cols-4'}`}>
         <Button
           onClick={handleCall}
           variant="outline"
@@ -148,17 +160,19 @@ export function ProductCardActions({
           <HelpCircle className="w-3 h-3" />
           Quote
         </Button>
-        <Button
-          variant="outline"
-          className="text-xs font-bold border-primary/50 hover:border-primary hover:bg-primary/10"
-          title="View full product details"
-          asChild
-        >
-          <Link href={detailsHref ?? `/products/${productId}`}>
-            <ExternalLink className="w-3 h-3" />
-            Details
-          </Link>
-        </Button>
+        {detailsHref !== null && (
+          <Button
+            variant="outline"
+            className="text-xs font-bold border-primary/50 hover:border-primary hover:bg-primary/10"
+            title="View full product details"
+            asChild
+          >
+            <Link href={detailsHref ?? `/products/${productId}`}>
+              <ExternalLink className="w-3 h-3" />
+              Details
+            </Link>
+          </Button>
+        )}
       </div>
 
       {/* Info Badges */}

@@ -24,6 +24,7 @@ import {
   resolveBrandPartImage,
 } from '@/lib/brand-catalog'
 import { SCHEMA_AVAILABILITY, applyOverrideToProduct, getProductOverride } from '@/lib/merchant'
+import { getSalesMode } from '@/lib/catalog-fields'
 import { Star, ShieldCheck, Truck, BadgeCheck, ChevronRight, ImageIcon, ExternalLink } from 'lucide-react'
 
 interface PageProps {
@@ -47,8 +48,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (override?.hidden) return { robots: { index: false } }
   const product = applyOverrideToProduct(sheetProduct, override)
   const label = getBrandLabel(brand)
+  // Same rule checkout uses (lib/order-pricing.ts): quote-only parts have no price to show.
+  const priceSuffix =
+    getSalesMode(sheetProduct) === 'buy_now' ? ` — $${product.price.toLocaleString()}` : ''
   return {
-    title: `${product.name} | Used OEM ${label} Part — $${product.price.toLocaleString()}`,
+    title: `${product.name} | Used OEM ${label} Part${priceSuffix}`,
     description:
       product.description ||
       `Buy a tested used OEM ${product.name} with exact mileage-based pricing, ${WARRANTY} warranty, and nationwide shipping.`,
@@ -65,6 +69,9 @@ export default async function BrandProductPage({ params }: PageProps) {
   if (override?.hidden) notFound()
   const product = applyOverrideToProduct(sheetProduct, override)
   const availability = SCHEMA_AVAILABILITY[override?.availability ?? 'in_stock']
+  // Same rule checkout uses (lib/order-pricing.ts), so the page never offers a
+  // price or cart button that the order API would reject.
+  const quoteOnly = getSalesMode(sheetProduct) !== 'buy_now'
 
   const label = getBrandLabel(brand)
   const related = getRelatedBrandProducts(brand, product)
@@ -94,7 +101,10 @@ export default async function BrandProductPage({ params }: PageProps) {
     brand: { '@type': 'Brand', name: label },
     category: partTypeHeading,
     url: canonicalUrl,
-    offers: tiers
+    // Quote-only parts have no real price, so publish no Offer rather than $0.
+    offers: quoteOnly
+      ? undefined
+      : tiers
       ? {
           '@type': 'AggregateOffer',
           priceCurrency: 'USD',
@@ -221,14 +231,15 @@ export default async function BrandProductPage({ params }: PageProps) {
 
                 {/* Mileage tier pricing + Call/Message/Quote/Cart actions */}
                 <BrandPurchasePanel
-                  productId={product.id}
+                  productId={product.canonicalSlug}
                   productName={product.name}
                   basePrice={product.price}
                   tiers={product.tiers}
                   productImage={product.imageUrl || fallbackImage}
                   productType={product.category || 'Part'}
-                  make={product.compatibility || label}
+                  make={label}
                   shipping={SHIPPING}
+                  quoteOnly={quoteOnly}
                 />
 
                 {/* Trust Badges */}
@@ -297,7 +308,9 @@ export default async function BrandProductPage({ params }: PageProps) {
                         <CardTitle className="text-sm line-clamp-2">{rp.name}</CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <span className="text-lg font-bold text-primary">${rp.price.toLocaleString()}</span>
+                        <span className="text-lg font-bold text-primary">
+                          {getSalesMode(rp) === 'buy_now' ? `$${rp.price.toLocaleString()}` : 'Call for price'}
+                        </span>
                       </CardContent>
                     </Card>
                   </Link>

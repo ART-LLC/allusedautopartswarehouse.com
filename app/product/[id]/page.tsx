@@ -62,7 +62,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
               {/* Image */}
               <div className="relative w-full aspect-square bg-muted rounded-xl overflow-hidden border border-border/40">
                 <Image
-                  src={product.image || "/placeholder.svg"}
+                  src={product.image || "/images/placeholder-part.png"}
                   alt={product.name}
                   fill
                   className="object-cover"
@@ -124,6 +124,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                   productImage={product.image}
                   productType={product.category}
                   make={product.fits}
+                  detailsHref={null}
                 />
 
                 {/* Trust Badges */}
@@ -162,7 +163,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                 <Link key={rp.id} href={`/product/${rp.id}`}>
                   <Card className="hover:shadow-lg transition-shadow duration-200 overflow-hidden h-full">
                     <div className="relative w-full h-40 bg-muted">
-                      <Image src={rp.image || "/placeholder.svg"} alt={rp.name} fill className="object-cover" />
+                      <Image src={rp.image || "/images/placeholder-part.png"} alt={rp.name} fill className="object-cover" />
                     </div>
                     <CardHeader className="pb-2">
                       <Badge className="w-fit mb-1">{rp.category}</Badge>

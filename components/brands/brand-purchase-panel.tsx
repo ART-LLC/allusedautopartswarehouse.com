@@ -13,6 +13,8 @@ interface BrandPurchasePanelProps {
   productType: string
   make: string
   shipping?: string
+  /** Sheet marks this part quote-only: show "Call for price", no cart. */
+  quoteOnly?: boolean
 }
 
 /**
@@ -28,18 +30,28 @@ export function BrandPurchasePanel({
   productType,
   make,
   shipping,
+  quoteOnly = false,
 }: BrandPurchasePanelProps) {
   // Price of the mileage tier the shopper selected (null = default medium tier).
   const [selectedPrice, setSelectedPrice] = useState<number | null>(null)
 
   return (
     <div className="flex flex-col gap-5">
-      {/* Interactive pricing by mileage — exact sheet tiers only */}
-      <MileagePriceSelector
-        basePrice={basePrice}
-        tiers={tiers}
-        onTierChange={(_, price) => setSelectedPrice(price)}
-      />
+      {quoteOnly ? (
+        <div className="flex flex-col gap-1">
+          <span className="text-3xl font-black text-primary">Call for price</span>
+          <span className="text-sm text-muted-foreground">
+            This part is priced by quote. Call us or request a quote for current price and availability.
+          </span>
+        </div>
+      ) : (
+        /* Interactive pricing by mileage — exact sheet tiers only */
+        <MileagePriceSelector
+          basePrice={basePrice}
+          tiers={tiers}
+          onTierChange={(_, price) => setSelectedPrice(price)}
+        />
+      )}
 
       <ProductCardActions
         productId={productId}
@@ -49,6 +61,8 @@ export function BrandPurchasePanel({
         productType={productType}
         make={make}
         shipping={shipping}
+        detailsHref={null}
+        quoteOnly={quoteOnly}
       />
     </div>
   )
