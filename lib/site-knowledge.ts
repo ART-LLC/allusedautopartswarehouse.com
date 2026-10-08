@@ -41,7 +41,7 @@ export const SITE_KNOWLEDGE: KnowledgeEntry[] = [
     url: "/return-policy",
     keywords: ["warranty", "guarantee", "coverage", "defect", "protected", "guaranteed"],
     content:
-      "Used parts include a 90-day warranty (rebuilt units: 12 months). If a part arrives defective or is not as described, contact support to arrange a replacement or refund.",
+      "Used and rebuilt parts include a 90-day warranty. If a part arrives defective or is not as described, contact support to arrange a replacement or refund.",
   },
   {
     id: "returns",
@@ -132,7 +132,7 @@ export function searchSiteKnowledge(query: string, limit = 3): KnowledgeEntry[] 
 export const SITE_SUMMARY = `AUAPW LLC — used auto parts marketplace (2,000+ verified salvage yards nationwide).
 - Phone: (708) 896-2383, Mon-Sat 8am-6pm PST. Email: auapworld@gmail.com (24h response).
 - Shipping: free on every part, US-wide, typically 3-7 business days with tracking.
-- Warranty: 90 days on used parts (rebuilt units: 12 months).
+- Warranty: 90 days on used and rebuilt parts.
 - Returns accepted for defective/damaged/not-as-described parts.
 - Guest checkout available; accounts support order tracking, wishlist, saved vehicles, warranty registration, and returns.
 - Categories: engines, transmissions, body, brakes, suspension, electrical, cooling, exhaust, drivetrain.`
