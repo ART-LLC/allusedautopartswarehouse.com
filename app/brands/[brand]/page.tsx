@@ -20,6 +20,7 @@ import {
 } from '@/lib/brand-catalog'
 import { ChevronRight, ChevronLeft, Search } from 'lucide-react'
 import { SearchForm } from '@/components/search-form'
+import { getSalesMode } from '@/lib/catalog-fields'
 import { BrandStorySection } from '@/components/brands/brand-story-section'
 import { BrandFeaturesSection } from '@/components/brands/brand-features-section'
 import { BrandMaterialTabs } from '@/components/brands/brand-material-tabs'
@@ -311,8 +312,12 @@ export default async function BrandCatalogPage({ params, searchParams }: PagePro
                         {product.name}
                       </h2>
                       <div className="mt-auto flex items-baseline justify-between gap-2">
-                        <span className="text-lg font-black text-primary">${product.price.toLocaleString()}</span>
-                        {product.tiers && (
+                        {getSalesMode(product) === 'buy_now' ? (
+                          <span className="text-lg font-black text-primary">${product.price.toLocaleString()}</span>
+                        ) : (
+                          <span className="text-base font-black text-primary">Call for price</span>
+                        )}
+                        {product.tiers && getSalesMode(product) === 'buy_now' && (
                           <span className="text-[11px] text-muted-foreground">
                             ${Math.min(product.tiers.high, product.tiers.low).toLocaleString()}–$
                             {Math.max(product.tiers.high, product.tiers.low).toLocaleString()} by mileage

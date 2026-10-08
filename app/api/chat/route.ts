@@ -48,13 +48,53 @@ function toToolPart(h: CatalogHit) {
   }
 }
 
+// Bounds on what an anonymous caller can send to the paid model.
+const MAX_MESSAGES = 20
+const MAX_BODY_CHARS = 200_000
+const MAX_OUTPUT_TOKENS = 1024
+
+type IncomingMessage = Partial<UIMessage> & { content?: unknown }
+
 export async function POST(req: Request) {
-  const { messages }: { messages: UIMessage[] } = await req.json()
+  const raw = await req.text()
+  if (raw.length > MAX_BODY_CHARS) {
+    return Response.json({ error: "Conversation too long" }, { status: 413 })
+  }
+
+  let incoming: IncomingMessage[]
+  try {
+    const body = JSON.parse(raw)
+    incoming = Array.isArray(body?.messages) ? body.messages : []
+  } catch {
+    return Response.json({ error: "Invalid JSON" }, { status: 400 })
+  }
+
+  // The /chat page sends plain { role, content } messages and reads the reply
+  // as a plain-text stream; useChat clients send UIMessages with `parts`.
+  const legacy = incoming.some((m) => !Array.isArray(m?.parts))
+
+  const messages: UIMessage[] = incoming
+    .filter((m) => m?.role === "user" || m?.role === "assistant")
+    .slice(-MAX_MESSAGES)
+    .map((m, i) =>
+      Array.isArray(m.parts)
+        ? (m as UIMessage)
+        : {
+            id: String(m.id ?? i),
+            role: m.role as UIMessage["role"],
+            parts: [{ type: "text" as const, text: String(m.content ?? "") }],
+          },
+    )
+
+  if (messages.length === 0) {
+    return Response.json({ error: "No messages" }, { status: 400 })
+  }
 
   const result = streamText({
     model: "openai/gpt-4o-mini",
     system: SYSTEM_PROMPT,
     messages: await convertToModelMessages(messages),
+    maxOutputTokens: MAX_OUTPUT_TOKENS,
     stopWhen: stepCountIs(5),
     tools: {
       searchParts: tool({
@@ -99,6 +139,10 @@ export async function POST(req: Request) {
       }),
     },
   })
+
+  if (legacy) {
+    return result.toTextStreamResponse()
+  }
 
   return createUIMessageStreamResponse({
     stream: toUIMessageStream({ stream: result.stream }),
