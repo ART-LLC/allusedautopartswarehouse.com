@@ -10,7 +10,7 @@ const FRAMES = [
 
 const STATS = [
   { icon: Truck, value: "Free", label: "Nationwide Shipping" },
-  { icon: ShieldCheck, value: "30–180", label: "Day Warranty" },
+  { icon: ShieldCheck, value: "90", label: "Day Warranty" },
   { icon: DollarSign, value: "40–70%", label: "Cost Savings" },
 ]
 

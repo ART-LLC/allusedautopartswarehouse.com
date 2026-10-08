@@ -1,6 +1,7 @@
 'use client'
 
 import { useCartStore } from '@/lib/stores/cart-store'
+import { SHIPPING as SHIPPING_POLICY } from '@/lib/site-policy'
 import Link from 'next/link'
 import { useState } from 'react'
 import { Trash2, Plus, Minus, ShoppingBag } from 'lucide-react'
@@ -18,7 +19,9 @@ export default function CartPage() {
   const [promoCode, setPromoCode] = useState('')
 
   const totalPrice = getTotalPrice()
-  const shipping = items.reduce((total, item) => total + (item.shippingCost ?? 0) * item.quantity, 0)
+  // Same formula as the order API (lib/order-pricing.ts). Not item.shippingCost:
+  // carts saved before shipping became free still carry the old $240.
+  const shipping = SHIPPING_POLICY.price * items.reduce((units, item) => units + item.quantity, 0)
   const tax = totalPrice * 0.08
   const finalTotal = totalPrice + tax + shipping
 
@@ -102,7 +105,7 @@ export default function CartPage() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-foreground/60">Shipping</span>
-                      <span className={shipping > 0 ? '' : 'text-green-400'}>${shipping.toFixed(2)}</span>
+                      <span className={shipping > 0 ? '' : 'text-green-400'}>{shipping > 0 ? `$${shipping.toFixed(2)}` : 'Free'}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-foreground/60">Tax (8%)</span>

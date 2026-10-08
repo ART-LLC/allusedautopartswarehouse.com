@@ -7,10 +7,10 @@ export function ShippingInfo() {
   const shippingOptions = [
     {
       icon: Truck,
-      title: 'Flat-Rate Shipping',
+      title: 'Free Shipping',
       description: '7-14 Business Days',
-      price: '$240',
-      details: 'A fixed $240 shipping charge applies to every part'
+      price: 'Free',
+      details: 'Insured freight is included on every part'
     },
     {
       icon: Clock,
@@ -30,8 +30,8 @@ export function ShippingInfo() {
       icon: MapPin,
       title: 'Nationwide Coverage',
       description: 'United States',
-      price: '$240',
-      details: 'The same flat shipping charge is shown in your cart and at checkout'
+      price: 'Free',
+      details: 'Free shipping is shown in your cart and at checkout'
     }
   ]
 
@@ -174,7 +174,7 @@ export function ShippingInfo() {
             </li>
             <li className="flex gap-3">
               <span className="text-primary font-bold">•</span>
-              <span>A flat $240 shipping charge is applied to every part in the cart</span>
+              <span>Shipping is free on every part in the cart</span>
             </li>
             <li className="flex gap-3">
               <span className="text-primary font-bold">•</span>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useCartStore } from '@/lib/stores/cart-store'
+import { SHIPPING as SHIPPING_POLICY } from '@/lib/site-policy'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -37,7 +38,9 @@ export default function CheckoutPage() {
   const [placedOrder, setPlacedOrder] = useState<{ orderNumber: string; totalAmount: number } | null>(null)
 
   const totalPrice = getTotalPrice()
-  const shipping = items.reduce((total, item) => total + (item.shippingCost ?? 0) * item.quantity, 0)
+  // Same formula as the order API (lib/order-pricing.ts). Not item.shippingCost:
+  // carts saved before shipping became free still carry the old $240.
+  const shipping = SHIPPING_POLICY.price * items.reduce((units, item) => units + item.quantity, 0)
   const tax = totalPrice * 0.08
   const finalTotal = totalPrice + shipping + tax
 
@@ -332,7 +335,7 @@ export default function CheckoutPage() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-foreground/60">Shipping</span>
-                      <span className={shipping > 0 ? '' : 'text-green-400'}>${shipping.toFixed(2)}</span>
+                      <span className={shipping > 0 ? '' : 'text-green-400'}>{shipping > 0 ? `$${shipping.toFixed(2)}` : 'Free'}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-foreground/60">Tax (8%)</span>
