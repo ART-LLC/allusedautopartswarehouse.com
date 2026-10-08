@@ -98,7 +98,7 @@ export function Navbar() {
           </div>
           <div className="header-boss-banner-item">
             <Zap className="w-3 h-3" />
-            <span>$240 Flat Shipping Per Part</span>
+            <span>Free Shipping on Every Part</span>
           </div>
           <div className="header-boss-banner-item">
             <Zap className="w-3 h-3" />
@@ -110,7 +110,7 @@ export function Navbar() {
           </div>
           <div className="header-boss-banner-item">
             <Zap className="w-3 h-3" />
-            <span>$240 Flat Shipping Per Part</span>
+            <span>Free Shipping on Every Part</span>
           </div>
         </div>
       </div>

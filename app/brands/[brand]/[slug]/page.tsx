@@ -25,6 +25,7 @@ import {
 } from '@/lib/brand-catalog'
 import { SCHEMA_AVAILABILITY, applyOverrideToProduct, getProductOverride } from '@/lib/merchant'
 import { getSalesMode } from '@/lib/catalog-fields'
+import { SHIPPING as SHIPPING_POLICY } from '@/lib/site-policy'
 import { Star, ShieldCheck, Truck, BadgeCheck, ChevronRight, ImageIcon, ExternalLink } from 'lucide-react'
 
 interface PageProps {
@@ -33,7 +34,7 @@ interface PageProps {
 
 const SITE_URL = 'https://allusedautopartswarehouse.com'
 const WARRANTY = '90 Days'
-const SHIPPING = '$240'
+const SHIPPING = SHIPPING_POLICY.price === 0 ? 'Free' : `$${SHIPPING_POLICY.price}`
 
 function getImageSearchUrl(name: string): string {
   return `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(`${name} used OEM part`)}`

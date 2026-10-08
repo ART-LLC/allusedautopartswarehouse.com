@@ -42,7 +42,7 @@ export default function ShippingPolicyPage() {
             <p className="mb-4">All parts are professionally packaged with protective materials to ensure safe delivery during transit. We take great care to prevent damage and ensure your parts arrive in excellent condition.</p>
 
             <h2 className="text-2xl font-bold mt-8 mb-4">Shipping Costs</h2>
-            <p className="mb-4"><strong>A flat $240 shipping charge applies to every part.</strong> The charge is displayed on product actions, in your cart, and at checkout before you complete your purchase.</p>
+            <p className="mb-4"><strong>Shipping is free on every part.</strong> Insured freight to the lower 48 states is included in the price, and your cart and checkout show $0.00 shipping.</p>
 
             <h2 className="text-2xl font-bold mt-8 mb-4">Signature Requirements</h2>
             <p className="mb-4">High-value items (over $1,000) require signature upon delivery for proof of delivery and insurance purposes.</p>
