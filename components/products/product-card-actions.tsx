@@ -15,10 +15,7 @@ interface ProductCardActionsProps {
   productType?: string
   make?: string
   shipping?: string
-  /**
-   * Where the "Details" button links. Defaults to /products/[productId];
-   * null hides it (e.g. when already on the product's own page).
-   */
+  /** Where the "Details" button links; the button is hidden without one. */
   detailsHref?: string | null
   /** Quote-only parts can't be bought online: hide quantity and cart buttons. */
   quoteOnly?: boolean
@@ -132,7 +129,7 @@ export function ProductCardActions({
       )}
 
       {/* Secondary Actions */}
-      <div className={`grid gap-2 ${detailsHref === null ? 'grid-cols-3' : 'grid-cols-4'}`}>
+      <div className={`grid gap-2 ${detailsHref ? 'grid-cols-4' : 'grid-cols-3'}`}>
         <Button
           onClick={handleCall}
           variant="outline"
@@ -160,14 +157,14 @@ export function ProductCardActions({
           <HelpCircle className="w-3 h-3" />
           Quote
         </Button>
-        {detailsHref !== null && (
+        {detailsHref && (
           <Button
             variant="outline"
             className="text-xs font-bold border-primary/50 hover:border-primary hover:bg-primary/10"
             title="View full product details"
             asChild
           >
-            <Link href={detailsHref ?? `/products/${productId}`}>
+            <Link href={detailsHref}>
               <ExternalLink className="w-3 h-3" />
               Details
             </Link>
